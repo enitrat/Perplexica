@@ -3,6 +3,7 @@ import { ImagesIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
+import { Message } from './ChatWindow';
 
 type Image = {
   url: string;
@@ -10,7 +11,13 @@ type Image = {
   title: string;
 };
 
-const SearchImages = ({ query }: { query: string }) => {
+const SearchImages = ({
+  query,
+  chat_history,
+}: {
+  query: string;
+  chat_history: Message[];
+}) => {
   const [images, setImages] = useState<Image[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -22,6 +29,10 @@ const SearchImages = ({ query }: { query: string }) => {
         <button
           onClick={async () => {
             setLoading(true);
+
+            const chatModelProvider = localStorage.getItem('chatModelProvider');
+            const chatModel = localStorage.getItem('chatModel');
+
             const res = await fetch(
               `${process.env.NEXT_PUBLIC_API_URL}/images`,
               {
@@ -31,7 +42,9 @@ const SearchImages = ({ query }: { query: string }) => {
                 },
                 body: JSON.stringify({
                   query: query,
-                  chat_history: [],
+                  chat_history: chat_history,
+                  chat_model_provider: chatModelProvider,
+                  chat_model: chatModel,
                 }),
               },
             );
@@ -49,7 +62,7 @@ const SearchImages = ({ query }: { query: string }) => {
             );
             setLoading(false);
           }}
-          className="border border-dashed border-[#1C1C1C] hover:bg-[#1c1c1c] active:scale-95 duration-200 transition px-4 py-2 flex flex-row items-center justify-between rounded-lg text-white text-sm w-full"
+          className="border border-dashed border-light-200 dark:border-dark-200 hover:bg-light-200 dark:hover:bg-dark-200 active:scale-95 duration-200 transition px-4 py-2 flex flex-row items-center justify-between rounded-lg dark:text-white text-sm w-full"
         >
           <div className="flex flex-row items-center space-x-2">
             <ImagesIcon size={17} />
@@ -59,11 +72,11 @@ const SearchImages = ({ query }: { query: string }) => {
         </button>
       )}
       {loading && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="bg-[#1C1C1C] h-32 w-full rounded-lg animate-pulse aspect-video object-cover"
+              className="bg-light-secondary dark:bg-dark-secondary h-32 w-full rounded-lg animate-pulse aspect-video object-cover"
             />
           ))}
         </div>
@@ -85,7 +98,7 @@ const SearchImages = ({ query }: { query: string }) => {
                     key={i}
                     src={image.img_src}
                     alt={image.title}
-                    className="h-full w-full aspect-video object-cover rounded-lg transition duration-200 active:scale-95 cursor-pointer"
+                    className="h-full w-full aspect-video object-cover rounded-lg transition duration-200 active:scale-95 hover:scale-[1.02] cursor-zoom-in"
                   />
                 ))
               : images.map((image, i) => (
@@ -101,13 +114,13 @@ const SearchImages = ({ query }: { query: string }) => {
                     key={i}
                     src={image.img_src}
                     alt={image.title}
-                    className="h-full w-full aspect-video object-cover rounded-lg transition duration-200 active:scale-95 cursor-pointer"
+                    className="h-full w-full aspect-video object-cover rounded-lg transition duration-200 active:scale-95 hover:scale-[1.02] cursor-zoom-in"
                   />
                 ))}
             {images.length > 4 && (
               <button
                 onClick={() => setOpen(true)}
-                className="bg-[#111111] hover:bg-[#1c1c1c] transition duration-200 active:scale-95 h-auto w-full rounded-lg flex flex-col justify-between text-white p-2"
+                className="bg-light-100 hover:bg-light-200 dark:bg-dark-100 dark:hover:bg-dark-200 transition duration-200 active:scale-95 hover:scale-[1.02] h-auto w-full rounded-lg flex flex-col justify-between text-white p-2"
               >
                 <div className="flex flex-row items-center space-x-1">
                   {images.slice(3, 6).map((image, i) => (
@@ -119,8 +132,8 @@ const SearchImages = ({ query }: { query: string }) => {
                     />
                   ))}
                 </div>
-                <p className="text-white/70 text-xs">
-                  View {images.slice(0, 2).length} more
+                <p className="text-black/70 dark:text-white/70 text-xs">
+                  View {images.length - 3} more
                 </p>
               </button>
             )}

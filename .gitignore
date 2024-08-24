@@ -6,15 +6,12 @@ yarn-error.log
 # Build output
 /.next/
 /out/
+/dist/
 
 # IDE/Editor specific
 .vscode/
 .idea/
 *.iml
-
-# Dependency lock files
-package-lock.json
-yarn.lock
 
 # Environment variables
 .env
@@ -22,6 +19,9 @@ yarn.lock
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Config files
+config.toml
 
 # Log files
 logs/
@@ -33,3 +33,6 @@ logs/
 # Miscellaneous
 .DS_Store
 Thumbs.db
+
+# Db
+db.sqlite

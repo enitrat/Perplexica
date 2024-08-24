@@ -1,24 +1,7 @@
-import { CopyPlus, ScanEye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Switch } from '@headlessui/react';
 
-export const Attach = () => {
-  return (
-    <button className="p-2 text-white/50 rounded-xl hover:bg-[#1c1c1c] transition duration-200 hover:text-white">
-      <CopyPlus />
-    </button>
-  );
-};
-
-export const Focus = () => {
-  return (
-    <button className="p-2 text-white/50 rounded-xl hover:bg-[#1c1c1c] transition duration-200 hover:text-white">
-      <ScanEye />
-    </button>
-  );
-};
-
-export const CopilotToggle = ({
+const CopilotToggle = ({
   copilotEnabled,
   setCopilotEnabled,
 }: {
@@ -30,14 +13,14 @@ export const CopilotToggle = ({
       <Switch
         checked={copilotEnabled}
         onChange={setCopilotEnabled}
-        className="bg-[#111111] border border-[#1C1C1C] relative inline-flex h-5 w-10 sm:h-6 sm:w-11 items-center rounded-full"
+        className="bg-light-secondary dark:bg-dark-secondary border border-light-200/70 dark:border-dark-200 relative inline-flex h-5 w-10 sm:h-6 sm:w-11 items-center rounded-full"
       >
         <span className="sr-only">Copilot</span>
         <span
           className={cn(
             copilotEnabled
               ? 'translate-x-6 bg-[#24A0ED]'
-              : 'translate-x-1 bg-white/50',
+              : 'translate-x-1 bg-black/50 dark:bg-white/50',
             'inline-block h-3 w-3 sm:h-4 sm:w-4 transform rounded-full transition-all duration-200',
           )}
         />
@@ -48,7 +31,7 @@ export const CopilotToggle = ({
           'text-xs font-medium transition-colors duration-150 ease-in-out',
           copilotEnabled
             ? 'text-[#24A0ED]'
-            : 'text-white/50 group-hover:text-white',
+            : 'text-black/50 dark:text-white/50 group-hover:text-black dark:group-hover:text-white',
         )}
       >
         Copilot
@@ -56,3 +39,5 @@ export const CopilotToggle = ({
     </div>
   );
 };
+
+export default CopilotToggle;
